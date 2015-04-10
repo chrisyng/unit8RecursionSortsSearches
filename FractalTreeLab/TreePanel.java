@@ -15,7 +15,7 @@ public class TreePanel extends JPanel
     private final int TOPX = 200, TOPY = 300;
     private final int BOTTOMX = 200, BOTTOMY = 380;
     private final int theta = 10;
-    private final double treeRatio = 0.8;
+    private final double treeRatio = 0.9;
     private int current; //current order
     private final int initLength = BOTTOMY-TOPY;
 
@@ -35,22 +35,22 @@ public class TreePanel extends JPanel
     //  intermediate points are computed, and each line segment is
     //  drawn as a fractal.
     //-----------------------------------------------------------------
-    public void drawFractal (int order, int x1, int y1, int x2, int y2, int angle, Graphics page)
+    public void drawFractal (int order, int x1, int y1, int x2, int y2, int angle1, int angle2, Graphics page)
     {
         int x3, y3, x4, y4;         
         page.drawLine (x1, y1, x2, y2);
-        int branchLength = (int) Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+        int branchLength = (int) (Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))*treeRatio);
         if (order == 1){
             return;
         }
         else
         {            
-            x3 = x2 + (int) (branchLength*Math.sin(Math.toRadians(angle)));
-            y3 = y2 - (int) (branchLength*Math.cos(Math.toRadians(angle)));
-            x4 = x2 - (int) (branchLength*Math.sin(Math.toRadians(angle)));
-            y4 = y2 - (int) (branchLength*Math.cos(Math.toRadians(angle)));
-            drawFractal(order-1, x2, y2, x3, y3, angle+theta, page);
-            drawFractal(order-1, x2, y2, x4, y4,angle+theta, page);
+            x3 = x2 + (int) (branchLength*Math.sin(Math.toRadians(angle1)));
+            y3 = y2 - (int) (branchLength*Math.cos(Math.toRadians(angle1)));
+            x4 = x2 + (int) (branchLength*Math.sin(Math.toRadians(angle2)));
+            y4 = y2 - (int) (branchLength*Math.cos(Math.toRadians(angle2)));
+            drawFractal(order-1, x2, y2, x3, y3, angle1+theta,angle1-theta, page);
+            drawFractal(order-1, x2, y2, x4, y4,angle2+theta, angle2-theta, page);
         }
     }
 
@@ -61,7 +61,7 @@ public class TreePanel extends JPanel
     {
         super.paintComponent (page);
         page.setColor (Color.green);
-        drawFractal (current, BOTTOMX, BOTTOMY, TOPX, TOPY, 20, page);        
+        drawFractal(current, BOTTOMX, BOTTOMY, TOPX, TOPY,  20, -20, page);          
     }
 
     //-----------------------------------------------------------------
